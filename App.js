@@ -5,11 +5,14 @@ import { initDatabase, registerUser, loginUser } from "./database";
 import LoginScreen from "./LoginScreen";
 import RegisterScreen from "./RegisterScreen";
 import HomeScreen from "./HomeScreen";
+import ChatListScreen from "./ChatListScreen";
+import ChatScreen from "./ChatScreen";
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [currentScreen, setCurrentScreen] = useState("login");
   const [currentUser, setCurrentUser] = useState(null);
+  const [selectedChatUser, setSelectedChatUser] = useState(null);
 
   useEffect(() => {
     initializeApp();
@@ -53,10 +56,33 @@ export default function App() {
       { text: "Cancel", style: "cancel" },
       {
         text: "Logout",
-        onPress: () => setCurrentUser(null),
+        onPress: () => {
+          setCurrentUser(null);
+          setCurrentScreen("login");
+          setSelectedChatUser(null);
+        },
         style: "destructive",
       },
     ]);
+  };
+
+  const handleOpenChat = () => {
+    setCurrentScreen("chatList");
+  };
+
+  const handleSelectChatUser = (user) => {
+    setSelectedChatUser(user);
+    setCurrentScreen("chat");
+  };
+
+  const handleBackToHome = () => {
+    setCurrentScreen("home");
+    setSelectedChatUser(null);
+  };
+
+  const handleBackToChatList = () => {
+    setCurrentScreen("chatList");
+    setSelectedChatUser(null);
   };
 
   if (isLoading) {
@@ -68,9 +94,39 @@ export default function App() {
   }
 
   if (currentUser) {
+    if (currentScreen === "chat" && selectedChatUser) {
+      return (
+        <>
+          <ChatScreen
+            currentUser={currentUser}
+            selectedUser={selectedChatUser}
+            onBack={handleBackToChatList}
+          />
+          <StatusBar style="auto" />
+        </>
+      );
+    }
+
+    if (currentScreen === "chatList") {
+      return (
+        <>
+          <ChatListScreen
+            currentUser={currentUser}
+            onSelectUser={handleSelectChatUser}
+            onBack={handleBackToHome}
+          />
+          <StatusBar style="auto" />
+        </>
+      );
+    }
+
     return (
       <>
-        <HomeScreen user={currentUser} onLogout={handleLogout} />
+        <HomeScreen
+          user={currentUser}
+          onLogout={handleLogout}
+          onOpenChat={handleOpenChat}
+        />
         <StatusBar style="auto" />
       </>
     );

@@ -7,7 +7,7 @@ import {
   SafeAreaView,
 } from "react-native";
 
-const HomeScreen = ({ user, onLogout }) => {
+const HomeScreen = ({ user, onLogout, onOpenChat }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
@@ -32,6 +32,10 @@ const HomeScreen = ({ user, onLogout }) => {
             <Text style={styles.value}>{user.id}</Text>
           </View>
         </View>
+
+        <TouchableOpacity style={styles.chatButton} onPress={onOpenChat}>
+          <Text style={styles.chatButtonText}>💬 Open Chat</Text>
+        </TouchableOpacity>
 
         <TouchableOpacity style={styles.logoutButton} onPress={onLogout}>
           <Text style={styles.logoutButtonText}>Logout</Text>
@@ -92,6 +96,18 @@ const styles = StyleSheet.create({
   value: {
     fontSize: 16,
     color: "#333",
+    fontWeight: "600",
+  },
+  chatButton: {
+    backgroundColor: "#007AFF",
+    padding: 15,
+    borderRadius: 8,
+    alignItems: "center",
+    marginBottom: 15,
+  },
+  chatButtonText: {
+    color: "#fff",
+    fontSize: 16,
     fontWeight: "600",
   },
   logoutButton: {

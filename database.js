@@ -21,6 +21,17 @@ export const initDatabase = async () => {
         password TEXT NOT NULL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       );
+
+      CREATE TABLE IF NOT EXISTS messages (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        sender_id INTEGER NOT NULL,
+        receiver_id INTEGER NOT NULL,
+        message TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        is_read INTEGER DEFAULT 0,
+        FOREIGN KEY (sender_id) REFERENCES users(id),
+        FOREIGN KEY (receiver_id) REFERENCES users(id)
+      );
     `);
 
     console.log("Database initialized successfully");
@@ -93,5 +104,82 @@ export const getAllUsers = async () => {
   } catch (error) {
     console.error("Error getting users:", error);
     return [];
+  }
+};
+
+// Chat Functions
+
+// Get all users except current user (for chat list)
+export const getChatUsers = async (currentUserId) => {
+  try {
+    const users = await db.getAllAsync(
+      "SELECT id, username, email FROM users WHERE id != ?",
+      [currentUserId]
+    );
+    return users;
+  } catch (error) {
+    console.error("Error getting chat users:", error);
+    return [];
+  }
+};
+
+// Send a message
+export const sendMessage = async (senderId, receiverId, message) => {
+  try {
+    const result = await db.runAsync(
+      "INSERT INTO messages (sender_id, receiver_id, message) VALUES (?, ?, ?)",
+      [senderId, receiverId, message]
+    );
+    return { success: true, messageId: result.lastInsertRowId };
+  } catch (error) {
+    console.error("Error sending message:", error);
+    return { success: false, error: error.message };
+  }
+};
+
+// Get messages between two users
+export const getMessages = async (userId1, userId2) => {
+  try {
+    const messages = await db.getAllAsync(
+      `SELECT m.*, u.username as sender_username 
+       FROM messages m 
+       JOIN users u ON m.sender_id = u.id
+       WHERE (m.sender_id = ? AND m.receiver_id = ?) 
+          OR (m.sender_id = ? AND m.receiver_id = ?)
+       ORDER BY m.created_at ASC`,
+      [userId1, userId2, userId2, userId1]
+    );
+    return messages;
+  } catch (error) {
+    console.error("Error getting messages:", error);
+    return [];
+  }
+};
+
+// Mark messages as read
+export const markMessagesAsRead = async (senderId, receiverId) => {
+  try {
+    await db.runAsync(
+      "UPDATE messages SET is_read = 1 WHERE sender_id = ? AND receiver_id = ? AND is_read = 0",
+      [senderId, receiverId]
+    );
+    return { success: true };
+  } catch (error) {
+    console.error("Error marking messages as read:", error);
+    return { success: false };
+  }
+};
+
+// Get unread message count
+export const getUnreadCount = async (userId) => {
+  try {
+    const result = await db.getFirstAsync(
+      "SELECT COUNT(*) as count FROM messages WHERE receiver_id = ? AND is_read = 0",
+      [userId]
+    );
+    return result?.count || 0;
+  } catch (error) {
+    console.error("Error getting unread count:", error);
+    return 0;
   }
 };

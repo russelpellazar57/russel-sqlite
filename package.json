@@ -1,5 +1,5 @@
 {
-  "name": "auth-sqlite",
+  "name": "russel-sqlite",
   "license": "0BSD",
   "version": "1.0.0",
   "main": "index.js",
@@ -16,7 +16,9 @@
     "expo-sqlite": "^16.0.9",
     "expo-status-bar": "~3.0.8",
     "react": "19.1.0",
-    "react-native": "0.81.5"
+    "react-native": "0.81.5",
+    "expo-image-picker": "~17.0.8",
+    "@react-native-async-storage/async-storage": "2.2.0"
   },
   "private": true
 }

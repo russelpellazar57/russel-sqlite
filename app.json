@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "auth-sqlite",
-    "slug": "auth-sqlite",
+    "name": "russel-sqlite",
+    "slug": "russel-sqlite",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

@@ -10,18 +10,21 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 const RegisterScreen = ({ onRegister, onNavigateToLogin }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  // Removed profileImage state
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
+  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  // Removed pickImage function
 
   const handleRegister = async () => {
     if (
@@ -51,8 +54,10 @@ const RegisterScreen = ({ onRegister, onNavigateToLogin }) => {
 
     setLoading(true);
     try {
-      await onRegister(username.trim(), email.trim(), password);
+      // Gi-pasa ang 'null' para sa profileImage (since wala na ni gi-pick)
+      await onRegister(username.trim(), email.trim(), password, null); 
     } catch (error) {
+      console.error(error);
       Alert.alert("Error", "An unexpected error occurred");
     } finally {
       setLoading(false);
@@ -68,9 +73,12 @@ const RegisterScreen = ({ onRegister, onNavigateToLogin }) => {
         <View style={styles.formContainer}>
           <Text style={styles.title}>Register</Text>
 
+          {/* Removed Profile Image Picker and related components */}
+
           <TextInput
             style={styles.input}
             placeholder="Username"
+            placeholderTextColor="#aaa"
             value={username}
             onChangeText={setUsername}
             autoCapitalize="none"
@@ -80,6 +88,7 @@ const RegisterScreen = ({ onRegister, onNavigateToLogin }) => {
           <TextInput
             style={styles.input}
             placeholder="Email"
+            placeholderTextColor="#aaa"
             value={email}
             onChangeText={setEmail}
             autoCapitalize="none"
@@ -87,23 +96,51 @@ const RegisterScreen = ({ onRegister, onNavigateToLogin }) => {
             autoCorrect={false}
           />
 
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            autoCapitalize="none"
-          />
+          {/* Password with eye icon */}
+          <View style={styles.passwordRow}>
+            <TextInput
+              style={[styles.input, { flex: 1, marginBottom: 0 }]}
+              placeholder="Password"
+              placeholderTextColor="#aaa"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={!showPassword}
+              autoCapitalize="none"
+            />
+            <TouchableOpacity
+              onPress={() => setShowPassword(!showPassword)}
+              style={styles.eyeButton}
+            >
+              <Ionicons
+                name={showPassword ? "eye-off" : "eye"}
+                size={22}
+                color="#BB86FC"
+              />
+            </TouchableOpacity>
+          </View>
 
-          <TextInput
-            style={styles.input}
-            placeholder="Confirm Password"
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            secureTextEntry
-            autoCapitalize="none"
-          />
+          {/* Confirm Password with eye icon */}
+          <View style={styles.passwordRow}>
+            <TextInput
+              style={[styles.input, { flex: 1, marginBottom: 0 }]}
+              placeholder="Confirm Password"
+              placeholderTextColor="#aaa"
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              secureTextEntry={!showConfirm}
+              autoCapitalize="none"
+            />
+            <TouchableOpacity
+              onPress={() => setShowConfirm(!showConfirm)}
+              style={styles.eyeButton}
+            >
+              <Ionicons
+                name={showConfirm ? "eye-off" : "eye"}
+                size={22}
+                color="#BB86FC"
+              />
+            </TouchableOpacity>
+          </View>
 
           <TouchableOpacity
             style={[styles.button, loading && styles.buttonDisabled]}
@@ -115,10 +152,7 @@ const RegisterScreen = ({ onRegister, onNavigateToLogin }) => {
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.linkButton}
-            onPress={onNavigateToLogin}
-          >
+          <TouchableOpacity style={styles.linkButton} onPress={onNavigateToLogin}>
             <Text style={styles.linkText}>Already have an account? Login</Text>
           </TouchableOpacity>
         </View>
@@ -130,7 +164,7 @@ const RegisterScreen = ({ onRegister, onNavigateToLogin }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#121212",
   },
   scrollContent: {
     flexGrow: 1,
@@ -138,53 +172,63 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     padding: 20,
-    backgroundColor: "#fff",
+    backgroundColor: "#1E1E1E",
     margin: 20,
-    borderRadius: 10,
+    borderRadius: 12,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
+    elevation: 5,
   },
   title: {
     fontSize: 28,
     fontWeight: "bold",
     marginBottom: 30,
     textAlign: "center",
-    color: "#333",
+    color: "#fff",
   },
+  // Removed imagePicker and profileImage styles
   input: {
     borderWidth: 1,
-    borderColor: "#ddd",
-    padding: 15,
+    borderColor: "#444",
+    padding: 12,
     marginBottom: 15,
     borderRadius: 8,
-    fontSize: 16,
-    backgroundColor: "#fafafa",
+    color: "#fff",
+    backgroundColor: "#2C2C2C",
+  },
+  passwordRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    position: "relative",
+    marginBottom: 15, // Gidugang ang margin dinhi aron hapsay ang spacing
+  },
+  eyeButton: {
+    position: "absolute",
+    right: 15,
+    padding: 5,
   },
   button: {
-    backgroundColor: "#007AFF",
+    backgroundColor: "#BB86FC",
     padding: 15,
     borderRadius: 8,
     alignItems: "center",
-    marginTop: 10,
+    marginTop: 15,
   },
   buttonDisabled: {
-    backgroundColor: "#ccc",
+    backgroundColor: "#555",
   },
   buttonText: {
     color: "#fff",
-    fontSize: 16,
     fontWeight: "600",
   },
   linkButton: {
-    marginTop: 20,
+    marginTop: 15,
     alignItems: "center",
   },
   linkText: {
-    color: "#007AFF",
-    fontSize: 14,
+    color: "#BB86FC",
   },
 });
 

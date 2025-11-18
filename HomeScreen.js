@@ -6,6 +6,7 @@ import {
   StyleSheet,
   SafeAreaView,
   Image,
+  TextInput,
   Alert,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
@@ -16,6 +17,10 @@ const DEFAULT_PROFILE_URI =
 
 const HomeScreen = ({ user, onLogout, onOpenChat, onDeleteAccount }) => { 
   const [profileUri, setProfileUri] = useState(DEFAULT_PROFILE_URI);
+  
+  // Removed isEditing state and all related editing logic states
+  const [username] = useState(user.username); // Now read-only state
+  const [email] = useState(user.email);       // Now read-only state
 
   useEffect(() => {
     const loadProfileImage = async () => {
@@ -59,46 +64,37 @@ const HomeScreen = ({ user, onLogout, onOpenChat, onDeleteAccount }) => {
       "Confirm Deletion",
       "Are you sure you want to remove your profile picture?",
       [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
+        { text: "Cancel", style: "cancel" },
         {
           text: "Delete",
           style: "destructive",
           onPress: async () => {
             setProfileUri(DEFAULT_PROFILE_URI);
             await AsyncStorage.removeItem(`profile_${user.id}`);
-            console.log("Profile image deleted and AsyncStorage cleared.");
           },
         },
       ]
     );
   };
-    
+
   const handleDeleteAccount = () => {
     Alert.alert(
       "⚠️ PERMANENTLY DELETE ACCOUNT",
       "This action cannot be undone. All your data will be permanently erased. Are you absolutely sure?",
       [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
+        { text: "Cancel", style: "cancel" },
         {
           text: "YES, Delete My Account",
           style: "destructive",
           onPress: () => {
-            if (onDeleteAccount) {
-              onDeleteAccount();
-            } else {
-                console.warn("onDeleteAccount prop is missing!");
-            }
+            if (onDeleteAccount) onDeleteAccount();
           },
         },
       ]
     );
   };
+
+  // Removed handleEditProfile and handleSaveProfile functions
 
   return (
     <SafeAreaView style={styles.container}>
@@ -120,25 +116,31 @@ const HomeScreen = ({ user, onLogout, onOpenChat, onDeleteAccount }) => {
           )}
 
           <Text style={styles.welcomeText}>Welcome!</Text>
-          <Text style={styles.usernameText}>{user.username}</Text>
+          <Text style={styles.usernameText}>{username}</Text> 
         </View>
 
         <View style={styles.infoContainer}>
-          <View style={styles.infoRow}>
-            <Text style={styles.label}>Username:</Text>
-            <Text style={styles.value}>{user.username}</Text>
-          </View>
+          {/* Always display read-only view */}
+          <>
+            <View style={styles.infoRow}>
+              <Text style={styles.label}>Username:</Text>
+              <Text style={styles.value}>{username}</Text> 
+            </View>
 
-          <View style={styles.infoRow}>
-            <Text style={styles.label}>Email:</Text>
-            <Text style={styles.value}>{user.email}</Text>
-          </View>
+            <View style={styles.infoRow}>
+              <Text style={styles.label}>Email:</Text>
+              <Text style={styles.value}>{email}</Text> 
+            </View>
+          </>
 
           <View style={styles.infoRow}>
             <Text style={styles.label}>User ID:</Text>
             <Text style={styles.value}>{user.id}</Text>
           </View>
         </View>
+
+        {/* Removed Edit Button and Save Button */}
+        {/* Removed conditional rendering for editing state */}
 
         <TouchableOpacity style={styles.chatButton} onPress={onOpenChat}>
           <Text style={styles.chatButtonText}>💬 Open Chat</Text>
@@ -204,9 +206,24 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: "#333",
+    alignItems: "center",
   },
   label: { fontSize: 16, color: "#aaa", fontWeight: "500" },
   value: { fontSize: 16, color: "#fff", fontWeight: "600" },
+  
+  // Removed styles related to TextInput and editing
+  input: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: "#555",
+    padding: 8,
+    borderRadius: 5,
+    color: "#fff",
+    backgroundColor: "#2C2C2C",
+  },
+  
+  // Removed editButton and saveButton styles
+  
   chatButton: {
     backgroundColor: "#BB86FC",
     padding: 15,
@@ -223,7 +240,6 @@ const styles = StyleSheet.create({
   },
   chatButtonText: { color: "#fff", fontSize: 16, fontWeight: "600" },
   logoutButtonText: { color: "#fff", fontSize: 16, fontWeight: "600" },
-  
   deleteAccountButton: {
     padding: 15,
     borderRadius: 8,

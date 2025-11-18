@@ -76,7 +76,6 @@ const ChatScreen = ({ currentUser, selectedUser, onBack }) => {
   };
 
   const handleLongPress = (item, event) => {
-    // Directly open emoji picker, no Alert
     setReactionTarget({
       messageId: item.id,
       currentReaction: item.reaction,
@@ -118,21 +117,23 @@ const ChatScreen = ({ currentUser, selectedUser, onBack }) => {
     const reactionEmoji = item.reaction;
 
     return (
-      <TouchableOpacity
-        style={[styles.messageRow, isMyMessage ? styles.myMessageRow : styles.theirMessageRow]}
-        onLongPress={(event) => handleLongPress(item, event)}
-        activeOpacity={0.8}
-      >
-        {!isMyMessage && selectedUser.profileImage && (
+      <View style={[styles.messageRow, isMyMessage ? styles.myMessageRow : styles.theirMessageRow]}>
+        {!isMyMessage && (
           <Image
             source={{ uri: selectedUser.profileImage || "https://cdn-icons-png.flaticon.com/512/149/149071.png" }}
             style={styles.messageAvatar}
           />
         )}
-        <View style={[styles.messageBubble, isMyMessage ? styles.myBubble : styles.theirBubble]}>
+
+        <TouchableOpacity
+          style={[styles.messageBubble, isMyMessage ? styles.myBubble : styles.theirBubble]}
+          onLongPress={(event) => handleLongPress(item, event)}
+          activeOpacity={0.8}
+        >
           <Text style={[styles.messageText, isMyMessage ? styles.myText : styles.theirText]}>
             {item.message}
           </Text>
+
           <Text style={[styles.timeText, isMyMessage ? styles.myTimeText : styles.theirTimeText]}>
             {new Date(item.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
           </Text>
@@ -142,8 +143,8 @@ const ChatScreen = ({ currentUser, selectedUser, onBack }) => {
               <Text style={styles.reactionText}>{reactionEmoji}</Text>
             </View>
           )}
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </View>
     );
   };
 
@@ -154,9 +155,10 @@ const ChatScreen = ({ currentUser, selectedUser, onBack }) => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
       >
+        {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={onBack} style={styles.backButton}>
-            <Text style={styles.backText}>Back</Text>
+            <Text style={styles.backText}>⬅️</Text>
           </TouchableOpacity>
           <Image
             source={{ uri: selectedUser.profileImage || "https://cdn-icons-png.flaticon.com/512/149/149071.png" }}
@@ -165,6 +167,7 @@ const ChatScreen = ({ currentUser, selectedUser, onBack }) => {
           <Text style={styles.headerTitle}>{selectedUser.username}</Text>
         </View>
 
+        {/* Messages */}
         <FlatList
           ref={flatListRef}
           data={messages}
@@ -179,6 +182,7 @@ const ChatScreen = ({ currentUser, selectedUser, onBack }) => {
           }
         />
 
+        {/* Input */}
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
@@ -228,50 +232,50 @@ const reactionPickerStyles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 10,
   },
-  emojiButton: {
-    padding: 8,
-    marginHorizontal: 2,
-  },
-  emojiText: {
-    fontSize: 24,
-  },
+  emojiButton: { padding: 8, marginHorizontal: 2 },
+  emojiText: { fontSize: 24 },
 });
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#121212" },
   header: { flexDirection: "row", alignItems: "center", padding: 15, backgroundColor: "#1E1E1E", borderBottomWidth: 1, borderBottomColor: "#333" },
   backButton: { marginRight: 10, paddingVertical: 6, paddingHorizontal: 12, backgroundColor: "#2A2A2A", borderRadius: 8 },
-  backText: { fontSize: 16, color: "#BB86FC", fontWeight: "600" },
+  backText: { fontSize: 18, color: "#BB86FC", fontWeight: "600" },
   avatar: { width: 40, height: 40, borderRadius: 20, marginRight: 10 },
   headerTitle: { fontSize: 18, fontWeight: "600", flex: 1, color: "#fff" },
+
   messagesContainer: { padding: 15, flexGrow: 1 },
-  messageRow: { flexDirection: "row", marginBottom: 15, maxWidth: "80%" },
+  messageRow: { flexDirection: "row", marginBottom: 10, maxWidth: "80%" },
   myMessageRow: { alignSelf: "flex-end", justifyContent: "flex-end" },
   theirMessageRow: { alignSelf: "flex-start" },
-  messageBubble: { padding: 12, borderRadius: 15, position: 'relative' },
+
+  messageBubble: { padding: 12, borderRadius: 20, position: 'relative', shadowColor: '#000', shadowOpacity: 0.15, shadowOffset: { width: 0, height: 2 }, shadowRadius: 4, elevation: 2 },
   myBubble: { backgroundColor: "#007AFF", borderBottomRightRadius: 5 },
   theirBubble: { backgroundColor: "#2A2A2A", borderBottomLeftRadius: 5 },
   messageText: { fontSize: 16, lineHeight: 20 },
   myText: { color: "#fff" },
   theirText: { color: "#fff" },
-  timeText: { fontSize: 11, marginTop: 5 },
-  myTimeText: { color: "rgba(255, 255, 255, 0.7)", textAlign: "right" },
+  timeText: { fontSize: 10, marginTop: 5 },
+  myTimeText: { color: "rgba(255,255,255,0.7)", textAlign: "right" },
   theirTimeText: { color: "#aaa" },
+
   emptyContainer: { flex: 1, alignItems: "center", justifyContent: "center", paddingTop: 100 },
   emptyText: { fontSize: 16, color: "#999", textAlign: "center" },
+
   inputContainer: { flexDirection: "row", padding: 10, backgroundColor: "#1E1E1E", borderTopWidth: 1, borderTopColor: "#333", alignItems: "center" },
-  input: { flex: 1, borderWidth: 1, borderColor: "#333", borderRadius: 20, paddingHorizontal: 15, paddingVertical: 10, marginRight: 10, maxHeight: 100, fontSize: 16, color: "#fff", backgroundColor: "#2A2A2A" },
-  sendButton: { backgroundColor: "#BB86FC", borderRadius: 20, paddingHorizontal: 20, paddingVertical: 10 },
+  input: { flex: 1, borderWidth: 1, borderColor: "#333", borderRadius: 25, paddingHorizontal: 15, paddingVertical: 10, marginRight: 10, maxHeight: 100, fontSize: 16, color: "#fff", backgroundColor: "#2A2A2A" },
+  sendButton: { backgroundColor: "#BB86FC", borderRadius: 25, paddingHorizontal: 20, paddingVertical: 12 },
   sendButtonDisabled: { backgroundColor: "#555" },
   sendButtonText: { color: "#fff", fontWeight: "600", fontSize: 16 },
-  messageAvatar: { width: 30, height: 30, borderRadius: 15, marginRight: 8 },
+
+  messageAvatar: { width: 35, height: 35, borderRadius: 17.5, marginRight: 8 },
 
   reactionContainer: {
     position: 'absolute',
     bottom: -10,
     backgroundColor: '#1E1E1E',
     borderRadius: 10,
-    padding: 2,
+    padding: 4,
     borderWidth: 1,
     borderColor: '#007AFF',
     shadowColor: '#000',
@@ -279,19 +283,9 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 3,
   },
-  myReaction: {
-    right: 0,
-    backgroundColor: '#007AFF',
-    borderColor: '#fff',
-  },
-  theirReaction: {
-    left: 0,
-    backgroundColor: '#2A2A2A',
-    borderColor: '#BB86FC',
-  },
-  reactionText: {
-    fontSize: 12,
-  }
+  myReaction: { right: 0, backgroundColor: '#007AFF', borderColor: '#fff' },
+  theirReaction: { left: 0, backgroundColor: '#2A2A2A', borderColor: '#BB86FC' },
+  reactionText: { fontSize: 12 },
 });
 
 export default ChatScreen;

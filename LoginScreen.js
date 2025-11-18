@@ -10,9 +10,9 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons"; // 👁️ icon
+import { Ionicons } from "@expo/vector-icons";
 
-const LoginScreen = ({ onLogin, onNavigateToRegister }) => {
+const LoginScreen = ({ onLogin, onNavigateToRegister, onNavigateToAbout }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -23,7 +23,6 @@ const LoginScreen = ({ onLogin, onNavigateToRegister }) => {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
-
     setLoading(true);
     try {
       await onLogin(username.trim(), password);
@@ -86,26 +85,28 @@ const LoginScreen = ({ onLogin, onNavigateToRegister }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.linkButton}
+            style={[styles.linkButton, styles.registerLink]}
             onPress={onNavigateToRegister}
           >
             <Text style={styles.linkText}>Don't have an account? Register</Text>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.linkButton, styles.aboutLink]}
+            onPress={onNavigateToAbout}
+          >
+            <Text style={[styles.linkText, styles.aboutLinkText]}>About</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
+
     </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#121212",
-  },
-  scrollContent: {
-    flexGrow: 1,
-    justifyContent: "center",
-  },
+  container: { flex: 1, backgroundColor: "#121212" },
+  scrollContent: { flexGrow: 1, justifyContent: "center" },
   formContainer: {
     padding: 20,
     backgroundColor: "#1E1E1E",
@@ -117,54 +118,28 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 5,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    marginBottom: 30,
-    textAlign: "center",
-    color: "#fff",
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#333",
-    padding: 15,
-    marginBottom: 15,
-    borderRadius: 8,
-    fontSize: 16,
-    backgroundColor: "#2C2C2C",
-    color: "#fff",
-  },
-  passwordRow: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  eyeButton: {
-    position: "absolute",
-    right: 15,
-    padding: 5,
-  },
-  button: {
-    backgroundColor: "#BB86FC",
-    padding: 15,
-    borderRadius: 8,
-    alignItems: "center",
-    marginTop: 10,
-  },
-  buttonDisabled: {
-    backgroundColor: "#555",
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  linkButton: {
+  title: { fontSize: 28, fontWeight: "bold", marginBottom: 30, textAlign: "center", color: "#fff" },
+  input: { borderWidth: 1, borderColor: "#333", padding: 15, marginBottom: 15, borderRadius: 8, fontSize: 16, backgroundColor: "#2C2C2C", color: "#fff" },
+  passwordRow: { flexDirection: "row", alignItems: "center" },
+  eyeButton: { position: "absolute", right: 15, padding: 5 },
+  button: { backgroundColor: "#BB86FC", padding: 15, borderRadius: 8, alignItems: "center", marginTop: 15 },
+  buttonDisabled: { backgroundColor: "#555" },
+  buttonText: { color: "#fff", fontSize: 16, fontWeight: "600" },
+  
+  linkButton: { marginTop: 0, alignItems: "center" },
+  
+  registerLink: {
     marginTop: 20,
-    alignItems: "center",
   },
-  linkText: {
-    color: "#BB86FC",
-    fontSize: 14,
+  
+  aboutLink: {
+    marginTop: 5,
+  },
+  
+  linkText: { color: "#BB86FC", fontSize: 14 },
+
+  aboutLinkText: {
+    textDecorationLine: 'underline',
   },
 });
 

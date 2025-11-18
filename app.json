@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "russel-sqlite",
-    "slug": "russel-sqlite",
+    "name": "Pellazar_R",
+    "slug": "Pellazar_R",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/russel.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/russel.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,13 +17,20 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/russel.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.russel57.russelsqlite"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "owner": "russel57",
+    "extra": {
+      "eas": {
+        "projectId": "c7720112-c7f0-480f-8ed8-0e64731225a9"
+      }
     }
   }
 }

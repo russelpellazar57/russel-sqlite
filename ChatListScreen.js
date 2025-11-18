@@ -63,11 +63,18 @@ const ChatListScreen = ({ currentUser, onSelectUser, onBack }) => {
     }
 
     const lower = text.toLowerCase();
+    const searchId = text.trim();
 
     const results = users.filter(
       (u) =>
         u.username.toLowerCase().includes(lower) ||
-        u.email.toLowerCase().includes(lower)
+        u.email.toLowerCase().includes(lower) ||
+        // --- UPDATED SEARCH LOGIC START ---
+        // Search by user ID (useful for numeric IDs)
+        u.id.toString().includes(searchId) || 
+        // Search by profile image URI (if it contains identifying info)
+        (u.profileImage && u.profileImage.toLowerCase().includes(lower))
+        // --- UPDATED SEARCH LOGIC END ---
     );
 
     setFilteredUsers(results);

@@ -8,7 +8,7 @@ const AboutScreen = ({ onBack }) => {
 
       {/* 🔹 Local profile photo from assets */}
       <Image
-        source={require("./assets/russel.png")} // <-- make sure the path is correct
+        source={require("./assets/russel.png")}
         style={styles.profilePic}
       />
 
@@ -18,6 +18,12 @@ const AboutScreen = ({ onBack }) => {
         Hello! I am Russel Pellazar, a mobile app and web development beginner.
         I enjoy learning React Native, JavaScript, and building useful apps.
       </Text>
+
+      {/* 🔹 Submitted Info (MOVED HERE BELOW BIO) */}
+      <View style={styles.submitBox}>
+        <Text style={styles.submitText}>Submitted by: <Text style={styles.highlight}>Russel O. Pellazar</Text></Text>
+        <Text style={styles.submitText}>Submitted to: <Text style={styles.highlight}>Jay Ian Camelotes</Text></Text>
+      </View>
 
       <View style={styles.infoBox}>
         <Text style={styles.infoTitle}>🏡 Address</Text>
@@ -40,15 +46,78 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "#121212",
   },
-  title: { fontSize: 26, fontWeight: "bold", color: "#BB86FC", marginBottom: 20 },
-  profilePic: { width: 130, height: 130, borderRadius: 65, marginBottom: 15, borderWidth: 3, borderColor: "#BB86FC" },
-  name: { fontSize: 22, color: "#fff", fontWeight: "bold", marginBottom: 10 },
-  bio: { color: "#ccc", fontSize: 15, textAlign: "center", marginBottom: 20, paddingHorizontal: 10 },
-  infoBox: { backgroundColor: "#1E1E1E", width: "100%", padding: 15, borderRadius: 10 },
-  infoTitle: { fontSize: 18, fontWeight: "700", color: "#BB86FC", marginBottom: 5 },
-  infoText: { color: "#fff", fontSize: 15 },
-  backButton: { marginTop: 20, padding: 10, borderRadius: 8, backgroundColor: "#BB86FC" },
-  backButtonText: { color: "#fff", fontSize: 16, fontWeight: "600" },
+  title: { 
+    fontSize: 26, 
+    fontWeight: "bold", 
+    color: "#BB86FC", 
+    marginBottom: 20 
+  },
+
+  submitBox: {
+    backgroundColor: "#1E1E1E",
+    width: "100%",
+    padding: 15,
+    marginBottom: 20,
+    borderRadius: 10,
+  },
+  submitText: {
+    color: "#ccc",
+    fontSize: 15,
+    marginBottom: 5,
+  },
+  highlight: {
+    color: "#BB86FC",
+    fontWeight: "600",
+  },
+
+  profilePic: { 
+    width: 130, 
+    height: 130, 
+    borderRadius: 65, 
+    marginBottom: 15, 
+    borderWidth: 3, 
+    borderColor: "#BB86FC" 
+  },
+  name: { 
+    fontSize: 22, 
+    color: "#fff", 
+    fontWeight: "bold", 
+    marginBottom: 10 
+  },
+  bio: { 
+    color: "#ccc", 
+    fontSize: 15, 
+    textAlign: "center", 
+    marginBottom: 20, 
+    paddingHorizontal: 10 
+  },
+  infoBox: { 
+    backgroundColor: "#1E1E1E", 
+    width: "100%", 
+    padding: 15, 
+    borderRadius: 10 
+  },
+  infoTitle: { 
+    fontSize: 18, 
+    fontWeight: "700", 
+    color: "#BB86FC", 
+    marginBottom: 5 
+  },
+  infoText: { 
+    color: "#fff", 
+    fontSize: 15 
+  },
+  backButton: { 
+    marginTop: 20, 
+    padding: 10, 
+    borderRadius: 8, 
+    backgroundColor: "#BB86FC" 
+  },
+  backButtonText: { 
+    color: "#fff", 
+    fontSize: 16, 
+    fontWeight: "600" 
+  },
 });
 
 export default AboutScreen;
